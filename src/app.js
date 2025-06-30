@@ -70,3 +70,4 @@ const initializeApp = async () => {
 initializeApp();
 
 export default app;
+ 
