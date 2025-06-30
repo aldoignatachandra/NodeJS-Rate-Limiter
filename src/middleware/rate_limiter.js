@@ -9,9 +9,9 @@ import config from "../config/index.js";
  */
 export const createRateLimiterMiddleware = (redisClient, options) => {
   const {
-    points = 100,         // Number of points per duration
-    duration = 60 * 15,   // Duration in seconds (default: 15 minutes)
-    keyPrefix = "rlflx",  // Redis key prefix
+    points = 100, // Number of points per duration
+    duration = 60 * 15, // Duration in seconds (default: 15 minutes)
+    keyPrefix = "rlflx", // Redis key prefix
   } = options;
 
   const rateLimiter = new RateLimiterRedis({

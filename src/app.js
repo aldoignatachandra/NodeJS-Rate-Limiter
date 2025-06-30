@@ -4,13 +4,10 @@ import morgan from "morgan";
 import helmet from "helmet";
 import config from "./config/index.js";
 import { createRedisClient } from "./utils/redis.js";
-import {
-  createStandardLimiter,
-  createPremiumLimiter,
-  createStatusLimiter,
-} from "./middleware/rate_limiter.js";
+import { createStandardLimiter } from "./middleware/rate_limiter.js";
 import { errorHandler, notFound } from "./middleware/error_handler.js";
 import createApiRoutes from "./routes/api_routes.js";
+import { createIpBasedLimiter } from "./utils/rate_limit_strategies.js";
 
 // Initialize Express app
 const app = express();
@@ -27,16 +24,31 @@ const initializeApp = async () => {
     // Create Redis client
     const redisClient = await createRedisClient();
 
-    // Create rate limiters with Redis
+    // Create IP-based rate limiter with custom options
+    const ipBasedLimiter = createIpBasedLimiter(redisClient, {
+      // Standard IPs
+      defaultPoints: 100,
+      defaultDuration: 15 * 60, // 15 minutes
+
+      // Trusted IPs (add your admin/internal IPs)
+      trustedPoints: 500,
+      trustedDuration: 15 * 60,
+      trustedIps: ["127.0.0.1", "::1", "192.168.1.100"], // Add your trusted IPs
+
+      // Restricted IPs (add problematic IPs)
+      restrictedPoints: 20,
+      restrictedDuration: 15 * 60,
+      restrictedIps: ["192.168.1.200"], // Add IPs to restrict
+    });
+
+    // Create standard rate limiter
     const standardLimiter = createStandardLimiter(redisClient);
-    const premiumLimiter = createPremiumLimiter(redisClient);
-    const statusLimiter = createStatusLimiter(redisClient);
 
     // Create API routes with rate limiters
     const apiRoutes = createApiRoutes({
-      standardLimiter,
-      premiumLimiter,
-      statusLimiter,
+      standardLimiter: ipBasedLimiter,
+      premiumLimiter: ipBasedLimiter,
+      statusLimiter: standardLimiter,
     });
 
     // Mount API routes
@@ -70,4 +82,3 @@ const initializeApp = async () => {
 initializeApp();
 
 export default app;
- 
