@@ -20,7 +20,7 @@ const config = {
   host: "localhost",
   port: 3000,
   endpoint: process.argv[2] || "public", // Default to public endpoint
-  requests: parseInt(process.argv[3]) || 150, // Default to 150 requests
+  requests: parseInt(process.argv[3]) || 1500, // Default to 1500 requests
   concurrency: parseInt(process.argv[4]) || 10, // Default to 10 concurrent requests
   delayMs: 10, // Small delay between requests to see rate limiting in action
 };
@@ -209,4 +209,3 @@ processRequests()
   .catch((error) => {
     console.error("Test failed:", error);
   });
- 

@@ -186,7 +186,7 @@ Use the included test script to see rate limiting in action:
 node test-rate-limit.js
 
 # Test premium endpoint with 200 requests
-node test-rate-limit.js premium 200
+node test-rate-limit.js premium 2000
 
 # Test public endpoint with 100 requests, 5 at a time
 node test-rate-limit.js public 100 5

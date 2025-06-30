@@ -13,6 +13,7 @@ export const createFixedWindowLimiter = (redisClient, options = {}) => {
     keyPrefix: "fixedWindow",
     points: options.points || 100,
     duration: options.duration || 3600, // 1 hour in seconds
+    useRedisPackage: true,
   });
 };
 
@@ -31,6 +32,7 @@ export const createSlidingWindowLimiter = (redisClient, options = {}) => {
     duration: options.duration || 3600, // 1 hour in seconds
     execEvenly: true, // Try to distribute requests evenly
     blockDuration: options.blockDuration || 0,
+    useRedisPackage: true,
   });
 };
 
@@ -50,6 +52,7 @@ export const createTokenBucketLimiter = (redisClient, options = {}) => {
     duration: options.duration || 3600, // Refill period (1 hour)
     inmemoryBlockOnConsumed: options.points || 100, // Block when bucket is empty
     inmemoryBlockDuration: 1, // Block for just enough time for token refill
+    useRedisPackage: true,
   });
 };
 
@@ -67,6 +70,7 @@ export const createIpBasedLimiter = (redisClient, options = {}) => {
     keyPrefix: "ip:default",
     points: options.defaultPoints || 100,
     duration: options.defaultDuration || 3600,
+    useRedisPackage: true,
   });
 
   const trustedLimiter = new RateLimiterRedis({
@@ -74,6 +78,7 @@ export const createIpBasedLimiter = (redisClient, options = {}) => {
     keyPrefix: "ip:trusted",
     points: options.trustedPoints || 500,
     duration: options.trustedDuration || 3600,
+    useRedisPackage: true,
   });
 
   const restrictedLimiter = new RateLimiterRedis({
@@ -81,6 +86,7 @@ export const createIpBasedLimiter = (redisClient, options = {}) => {
     keyPrefix: "ip:restricted",
     points: options.restrictedPoints || 20,
     duration: options.restrictedDuration || 3600,
+    useRedisPackage: true,
   });
 
   // Example trusted and restricted IP ranges
@@ -147,6 +153,7 @@ export const createUserBasedLimiter = (redisClient, options = {}) => {
     keyPrefix: "user:anonymous",
     points: options.anonymousPoints || 50,
     duration: options.anonymousDuration || 3600,
+    useRedisPackage: true,
   });
 
   const authenticatedLimiter = new RateLimiterRedis({
@@ -154,6 +161,7 @@ export const createUserBasedLimiter = (redisClient, options = {}) => {
     keyPrefix: "user:authenticated",
     points: options.authenticatedPoints || 200,
     duration: options.authenticatedDuration || 3600,
+    useRedisPackage: true,
   });
 
   // Return middleware that selects appropriate limiter
