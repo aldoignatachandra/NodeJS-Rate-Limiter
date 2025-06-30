@@ -156,6 +156,7 @@ All endpoints return rate limit information in the response headers:
 ```
 nodejs-rate-limiter/
 ├── src/
+│   ├── api_doc/                      # Postman API Documentation
 │   ├── config/                       # Application configuration
 │   │   └── index.js                  # Central configuration management
 │   ├── controllers/                  # Request handlers
